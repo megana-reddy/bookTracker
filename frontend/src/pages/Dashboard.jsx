@@ -1,47 +1,68 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
-import BookCard from "../components/BookCard";
 import { useNavigate } from "react-router-dom";
 
+
 function Dashboard() {
-  const [books, setBooks] = useState([]);
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
-    const fetchBooks = async () => {
-      try {
-        const res = await axios.get("http://localhost:5000/api/books");
-        setBooks(res.data);
-      } catch (err) {
-        console.error("Error fetching books:", err);
-      }
+    const fetchUser = async () => {
+      const token = localStorage.getItem("token");
+
+        const res = await fetch("http://localhost:8000/api/auth/me", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = await res.json();
+          setUser(data);
     };
-    fetchBooks();
-  }, []);
+
+    fetchUser();
+  }, [navigate]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
 
   return (
-    <div className="p-4">
-      <h2 className="text-2xl font-bold mb-2">
-        Welcome {user ? user.username : "Guest"}! 👋
-      </h2>
-      <h3 className="text-xl font-semibold mb-4">📚 My Book Tracker</h3>
+  <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-orange-100">
+    {/* Navbar */}
+    <nav className="flex justify-between items-center px-6 py-4 bg-orange-200 shadow-md w-full">
+      <h1 className="text-2xl font-bold text-orange-800">📚 BookTracker</h1>
+      <button
+        onClick={handleLogout}
+        className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+      >
+        Logout
+      </button>
+    </nav>
 
-      {books.length === 0 ? (
-        <p>No books found. Add some!</p>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {books.map((book) => (
-            <BookCard
-              key={book._id}
-              book={book}
-              onClick={() => navigate(`/books/${book._id}`)}
-            />
-          ))}
-        </div>
-      )}
+    {/* Welcome Section */}
+    <div className="flex flex-col items-center justify-center mt-16 px-4">
+      <h1 className="text-3xl font-bold text-gray-800 mb-2">
+        Welcome back,{" "}
+        <span className="text-orange-600">
+          {user ? user.username : "Loading..."}
+        </span>
+      </h1>
+      <p className="text-gray-600 text-lg mb-8">
+        Track your reading journey and manage your library 📖
+      </p>
+
+      {/* Quick Actions */}
+      <div className="flex gap-6">
+        <button onClick={()=> navigate("/add-book")} className="px-6 py-3 bg-orange-500 text-white rounded-xl shadow hover:bg-orange-600 transition">
+          ➕ Add Book
+        </button>
+        <button onClick={()=> navigate("/library")} className="px-6 py-3 bg-yellow-500 text-white rounded-xl shadow hover:bg-yellow-600 transition">
+          📖 View Library
+        </button>
+      </div>
     </div>
-  );
+  </div>
+);
+
 }
 
 export default Dashboard;

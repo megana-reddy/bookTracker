@@ -2,7 +2,8 @@ import express from 'express' // Express → framework to build backend APIs
 import mongoose from 'mongoose' // Mongoose → to connect & interact with MongoDB
 import cors from 'cors' // CORS → allow frontend (React) to talk with backend
 import dotenv from 'dotenv' // Dotenv → load environment variables from .env file
-import router from './routes/authRoutes.js'
+import authRoutes from './routes/authRoutes.js'
+import bookRoutes from './routes/bookRoutes.js'
 
 // Load environment variables (like PORT, Mongo URI) from .env file
 dotenv.config(); 
@@ -13,11 +14,6 @@ const app = express();
 //Middlewares
 app.use(cors()) // enable CORS so frontend can make API requests
 app.use(express.json()) // parse incoming JSON request bodies
-
-//Routes
-app.use('/api/auth', router);
-
-
 
 // A simple test route → just to check server is working
 app.get('/', (req, res) => {
@@ -41,3 +37,9 @@ mongoose.connect(process.env.MONGO_URI, {dbName: "book-tracker"})
     console.error("MongoDB Connection failed: ", err);
     process.exit(1); //exit app if DB fails
 })
+
+//Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/books', bookRoutes);
+
+

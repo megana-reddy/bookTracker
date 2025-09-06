@@ -1,40 +1,18 @@
-import express from 'express'
-import User from '../models/User.js'
+import { register, login, getMe } from "../controllers/authController.js";
+import express from "express"
+import authMiddleware from "../middleware/authMiddleware.js";
 
-const router = express.Router();
+const authRoutes = express.Router();
 
-//Register
-router.post('/register', async (req, res) => {
-    try{
-        const {username, email, password} = req.body;
-        const existingUser = await User.findOne({email});
-
-        if(existingUser){
-            res.status(400).json({message: "Email already exists"});
-        }
-
-        const newUser = new User({username, email, password});
-        await newUser.save();
-        res.status(201).json({message: "User Existed Successfully"});
-    } catch (err){
-        res.status(500).json({error: err.message});
-    }
-})
+// Register
+authRoutes.post("/register", register)
 
 // Login
-router.post("/login", async (req, res) => {
-  try {
-    const { email, password } = req.body;
+authRoutes.post("/login", login)
 
-    const user = await User.findOne({ email });
-    if (!user || user.password !== password) {
-      return res.status(400).json({ message: "Invalid credentials" });
-    }
 
-    res.json({ message: "Login successful", user });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+// Get current logged-in user (Library/Dashboard uses this)
+authRoutes.get("/me", authMiddleware, getMe);
 
-export default router;
+
+export default authRoutes;
