@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route, BrowserRouter } from "react-rou
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
-import ProtectedRoute from "./components/ProtectedRoute";
+import ProtectedRoute from "./protectedRoute/ProtectedRoute";
 import AddBook from "./pages/AddBook";
 import Library from "./pages/Library";
 import MyBooks from "./pages/MyBooks";
