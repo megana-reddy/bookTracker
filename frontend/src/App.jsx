@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, BrowserRouter } from "react-router-dom";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
@@ -10,7 +10,7 @@ import './App.css'
 
 function App() {
   return (
-    <Router>
+  <BrowserRouter>
       <Routes>
         {/* Default route → Register page */}
         <Route path="/" element={<Register />} />
@@ -27,7 +27,7 @@ function App() {
         <Route path="/library" element={<Library />} />
         <Route path="/mybooks" element={<MyBooks />} />
       </Routes>
-    </Router>
+  </BrowserRouter>
   );
 }
 

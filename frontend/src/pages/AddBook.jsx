@@ -25,7 +25,7 @@ function AddBook() {
 
       if (res.ok) {
         alert("Book added successfully! 📚");
-        navigate("/library"); // redirect to library after adding
+        navigate("/mybooks"); // redirect to myBooks after adding
       } else {
         alert("Failed to add book ❌");
       }

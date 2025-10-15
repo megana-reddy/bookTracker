@@ -4,6 +4,7 @@ import { Schema, model } from "mongoose";
 const bookSchema = new mongoose.Schema({
     title: {type:String, required:true},
     author: {type: String, required:true},
+    thumbnail: { type: String, default: null },
     status: {
         type: String,
         enum: ["Reading", "Completed", "Want to Read"],

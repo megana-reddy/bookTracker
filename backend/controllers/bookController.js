@@ -4,7 +4,7 @@ import Book from "../models/Book.js";
 
 export const addBook = async (req, res) => {
     try{
-        const {title, author, status} = req.body;
+        const {title, author, thumbnail, status} = req.body;
 
         if (!title || !author) {
             return res.status(400).json({ error: "Title and author are required" });
@@ -13,6 +13,7 @@ export const addBook = async (req, res) => {
         const newBook = new Book({
             title,
             author,
+            thumbnail,
             status
         })
 
@@ -78,5 +79,30 @@ export const deleteBook = async (req, res) => {
         res.json({message: "Book deleted Successfully"})
     } catch(error){
         res.status(500).json({error: error.message})
+    }
+}
+
+{/* search controller function */}
+// export const : exporting this function so it can be imported in bookRoutes.js
+// searchBooks : name of the function (you will use this in routes).
+// async (req, res) : asynchronous function with req (incoming request) and res (response we send back).
+export const searchBooks = async (req, res) => {
+    // try : start of try and catch block to safely handle errors.
+    try{
+        // req.query → holds query parameters from the URL (/api/books/search?query=Atomichabits)
+        //{ query } = req.query → destructures query out of req.query.
+        //Example: if URL is /api/books/search?query=Harry, then query = "Harry"
+        const {query} = req.query;
+        //if !query => if no search keyword is provided.
+        //return res.json([]) → immediately return an empty array response which means no result
+        if (!query) {
+            const books = await Book.find({
+                title: query
+            })
+            return books;
+        }
+    }
+    catch(err){
+
     }
 }
