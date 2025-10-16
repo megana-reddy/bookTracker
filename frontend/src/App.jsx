@@ -25,7 +25,7 @@ function App() {
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         <Route path="/add-book" element={<AddBook />} />
         <Route path="/library" element={<Library />} />
-        <Route path="/mybooks" element={<MyBooks />} />
+        <Route path="/my-books" element={<MyBooks />} />
       </Routes>
   </BrowserRouter>
   );

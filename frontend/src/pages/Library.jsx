@@ -83,7 +83,7 @@ function Library() {
       });
 
       if (res.ok) {
-        navigate("/mybooks");
+        navigate("/my-books");
       } else {
         alert("Failed to add ❌");
       }
@@ -101,7 +101,7 @@ function Library() {
           🔎 Search Your Library
         </h1>
         <button
-          onClick={() => navigate("/mybooks")}
+          onClick={() => navigate("/my-books")}
           className="px-5 py-2 bg-gradient-to-r from-orange-500 to-yellow-400 text-white font-semibold rounded-xl shadow hover:scale-105 transition"
         >
           📚 Go to My Books
