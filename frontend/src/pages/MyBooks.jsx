@@ -33,7 +33,7 @@ function MyBooks() {
   // Update status
   const handleUpdateStatus = async (bookId, newStatus) => {
     try {
-      const res = await fetch(`http://localhost:8000/api/books/${bookId}`, {
+      const res = await fetch(`https://booktracker-q2pv.onrender.com/api/books/${bookId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -60,7 +60,7 @@ function MyBooks() {
     if (!window.confirm("Are you sure you want to delete this book?")) return;
 
     try {
-      const res = await fetch(`http://localhost:8000/api/books/${bookId}`, {
+      const res = await fetch(`https://booktracker-q2pv.onrender.com/api/books/${bookId}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
