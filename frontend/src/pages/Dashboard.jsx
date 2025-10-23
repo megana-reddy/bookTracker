@@ -15,7 +15,7 @@ function Dashboard() {
       }
 
       try {
-        const res = await fetch("http://localhost:8000/api/auth/me", {
+        const res = await fetch("https://booktracker-q2pv.onrender.com/api/auth/me", {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
