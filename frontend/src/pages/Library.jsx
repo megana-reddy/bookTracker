@@ -3,19 +3,16 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Library() {
-  const [search, setSearch] = useState(""); // search input
-  const [results, setResults] = useState([]); // results from API
-  const [loading, setLoading] = useState(false); 
+  const [search, setSearch] = useState("");
+  const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Fetch default books when component mounts
   useEffect(() => {
     const fetchDefaultBooks = async () => {
       try {
         setLoading(true);
-        const res = await fetch(
-          "https://www.googleapis.com/books/v1/volumes?q=fiction"
-        );
+        const res = await fetch("https://www.googleapis.com/books/v1/volumes?q=fiction");
         const data = await res.json();
         setResults(data.items || []);
       } catch (err) {
@@ -27,33 +24,18 @@ function Library() {
     fetchDefaultBooks();
   }, []);
 
-  // Real-time search
   const handleSearch = async (e) => {
     const query = e.target.value;
     setSearch(query);
-
     if (!query) {
-      //  Re-fetch default books when cleared
-      try {
-        setLoading(true);
-        const res = await fetch(
-          "https://www.googleapis.com/books/v1/volumes?q=fiction"
-        );
-        const data = await res.json();
-        setResults(data.items || []);
-      } catch (err) {
-        console.error("Default fetch error:", err);
-      } finally {
-        setLoading(false);
-      }
+      const res = await fetch("https://www.googleapis.com/books/v1/volumes?q=fiction");
+      const data = await res.json();
+      setResults(data.items || []);
       return;
     }
-
     try {
       setLoading(true);
-      const res = await fetch(
-        `https://www.googleapis.com/books/v1/volumes?q=${query}`
-      );
+      const res = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${query}`);
       const data = await res.json();
       setResults(data.items || []);
     } catch (err) {
@@ -63,7 +45,6 @@ function Library() {
     }
   };
 
-  // Add book to My Books
   const handleAddFromGoogle = async (book) => {
     const newBook = {
       title: book.title || "Untitled",
@@ -73,7 +54,7 @@ function Library() {
     };
 
     try {
-      const res = await fetch("https://booktracker-q2pv.onrender.com/api/books", {
+      const res = await fetch("http://localhost:8000/api/books", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -94,106 +75,98 @@ function Library() {
   };
 
   return (
-    <div className="min-h-screen p-10 bg-gradient-to-br from-yellow-50 to-orange-100">
-      {/* Header */}
-      <div className="flex justify-between items-center mb-10">
-        <h1 className="text-3xl font-extrabold text-orange-700 drop-shadow">
-          🔎 Search Your Library
-        </h1>
-        <button
-          onClick={() => navigate("/my-books")}
-          className="px-5 py-2 bg-gradient-to-r from-orange-500 to-yellow-400 text-white font-semibold rounded-xl shadow hover:scale-105 transition"
-        >
-          📚 Go to My Books
-        </button>
-      </div>
-
-      {/* Search Bar */}
-      <div className="relative w-full md:w-1/2 mx-auto mb-12">
-        <input
-          type="text"
-          value={search}
-          onChange={handleSearch}
-          placeholder="Search by title or author..."
-          className="w-full px-5 py-3 rounded-full shadow-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-400"
+    <div className="min-h-screen relative overflow-hidden">
+      <video autoPlay loop muted className="fixed inset-0 w-full h-full object-cover z-0">
+        <source
+          src="https://res.cloudinary.com/dsgytnn2w/video/upload/v1762850214/From_KlickPin_CF_Magical_Library_in_2025___Library_aesthetic_Ancient_library_Magical_library_cxqmx3.mp4"
+          type="video/mp4"
         />
-        {loading && (
-          <span className="absolute right-5 top-3 text-orange-500 animate-pulse">
-            ⏳
-          </span>
+      </video>
+
+      <div className="fixed inset-0 bg-black/50 z-10"></div>
+
+      <div className="relative z-20 min-h-screen p-10">
+        
+        {/* Back */}
+        <button
+          onClick={() => navigate("/dashboard")}
+          className="absolute top-6 left-6 px-4 py-2 border border-black bg-black text-white rounded-lg shadow-lg hover:shadow-[0_0_12px_#c77dff] transition-all duration-300 font-medium"
+        >
+          ← Back
+        </button>
+
+        <div className="flex justify-between items-center mb-10 mt-6">
+          <h1 className="text-4xl font-extrabold text-white drop-shadow-lg">
+            🔎 Search Your Library
+          </h1>
+
+          <button
+            onClick={() => navigate("/my-books")}
+            className="px-6 py-3 border border-black bg-black text-white rounded-xl shadow-lg hover:shadow-[0_0_15px_#c77dff] transition-all duration-300"
+          >
+            📚 Go to My Books
+          </button>
+        </div>
+
+        {/* Search */}
+        <div className="relative w-full md:w-2/3 mx-auto mb-12">
+          <input
+            type="text"
+            value={search}
+            onChange={handleSearch}
+            placeholder="Search by title or author..."
+            className="w-full px-6 py-4 rounded-full border border-black bg-black/20 text-white placeholder-white/70 focus:ring-2 focus:ring-[#c77dff] focus:border-[#c77dff] hover:shadow-[0_0_18px_#c77dff] focus:shadow-[0_0_20px_#c77dff] transition-all duration-200"
+          />
+          {loading && (
+            <span className="absolute right-6 top-4 text-white/70 animate-pulse text-xl">
+              ⏳
+            </span>
+          )}
+        </div>
+
+        {/* Results */}
+        {results.length > 0 && (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
+            {results.map((item) => {
+              const info = item.volumeInfo || item;
+              return (
+                <div
+                  key={item.id}
+                  className="bg-white/10 rounded-xl p-4 flex flex-col items-center border border-white/20 hover:scale-105 hover:shadow-[0_0_18px_#c77dff] transition-all duration-300 backdrop-blur-xl"
+                >
+                  
+                  {info.imageLinks?.thumbnail ? (
+                    <img
+                      src={info.imageLinks.thumbnail}
+                      alt={info.title}
+                      className="w-24 h-36 object-cover rounded-lg mb-3"
+                    />
+                  ) : (
+                    <div className="w-24 h-36 bg-white/30 flex items-center justify-center rounded-lg text-3xl">
+                      📘
+                    </div>
+                  )}
+
+                  <h2 className="text-sm font-bold text-center text-white line-clamp-2">
+                    {info.title || "Untitled"}
+                  </h2>
+
+                  <p className="text-xs text-white/70 text-center mt-1">
+                    {info.authors ? info.authors.join(", ") : "Unknown"}
+                  </p>
+
+                  <button
+                    onClick={() => handleAddFromGoogle(info)}
+                    className="mt-3 px-3 py-2 text-xs border border-black bg-black text-white rounded-md hover:shadow-[0_0_12px_#c77dff] transition-all duration-300"
+                  >
+                    ➕ Add
+                  </button>
+                </div>
+              );
+            })}
+          </div>
         )}
       </div>
-
-      {/* Results */}
-      {results.length === 0 && !loading && search && (
-        <div className="flex flex-col items-center mt-16">
-          <img
-            src="https://cdn-icons-png.flaticon.com/512/7486/7486742.png"
-            alt="Not found"
-            className="w-40 h-40 mb-4"
-          />
-          <p className="text-lg font-semibold text-gray-600">
-            No books found. Try another search 🔎
-          </p>
-        </div>
-      )}
-
-      {results.length > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-          {results.map((item) => {
-            const info = item.volumeInfo || item;
-            return (
-              <div
-                key={item.id}
-                className="bg-white/80 backdrop-blur-md shadow-md rounded-lg p-4 flex flex-col items-center transition transform hover:scale-105 hover:shadow-xl"
-              >
-                {/* Thumbnail */}
-                {info.imageLinks?.thumbnail ? (
-                  <img
-                    src={info.imageLinks.thumbnail}
-                    alt={info.title || "Book cover"}
-                    className="w-24 h-36 object-cover rounded-md shadow mb-3"
-                  />
-                ) : (
-                  <div className="w-24 h-36 bg-gray-200 flex items-center justify-center rounded-md mb-3 text-2xl">
-                    📘
-                  </div>
-                )}
-
-                {/* Title */}
-                <h2 className="text-sm font-semibold text-center text-gray-800 line-clamp-2">
-                  {info.title || "Untitled"}
-                </h2>
-
-                {/* Author */}
-                <p className="text-xs text-gray-600 text-center mt-1 line-clamp-1">
-                  {info.authors ? info.authors.join(", ") : "Unknown Author"}
-                </p>
-
-                {/* Preview Link */}
-                {info.previewLink && (
-                  <a
-                    href={info.previewLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-2 text-xs text-blue-600 hover:underline"
-                  >
-                    Preview →
-                  </a>
-                )}
-
-                {/* Add Button */}
-                <button
-                  onClick={() => handleAddFromGoogle(info)}
-                  className="mt-3 px-3 py-1.5 text-xs bg-green-500 text-white rounded-md shadow hover:bg-green-600 transition"
-                >
-                  ➕ Add
-                </button>
-              </div>
-            );
-          })}
-        </div>
-      )}
     </div>
   );
 }

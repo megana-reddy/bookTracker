@@ -52,14 +52,13 @@ function Dashboard() {
       {/* Semi-transparent gradient overlay */}
       <div className="min-h-screen w-full bg-gradient-to-b from-black/40 via-black/30 to-black/60">
         {/* Navbar */}
-        {/* Navbar */}
-<nav className="flex justify-between items-center px-10 py-4 
-  bg-white/10 backdrop-blur-md 
-  border-b border-white/20 
+        <nav className="flex justify-between items-center px-10 py-4 
+  bg-black/30 backdrop-blur-md 
+  border-b border-white/10
   shadow-lg sticky top-0 z-50">
   
   {/* Logo / Brand */}
-  <h1 className="text-3xl font-extrabold bg-gradient-to-r from-orange-400 to-yellow-300 bg-clip-text text-transparent drop-shadow-lg tracking-wide">
+  <h1 className="text-3xl font-extrabold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent drop-shadow-lg tracking-wide">
     📚 BookTracker
   </h1>
 
@@ -67,21 +66,21 @@ function Dashboard() {
   <div className="flex items-center gap-8 text-white font-medium text-lg">
     <button
       onClick={() => navigate("/library")}
-      className="flex items-center gap-2 hover:scale-110 hover:text-yellow-300 transition-transform duration-300"
+      className="flex items-center gap-2 hover:scale-110 hover:shadow-[0_0_12px_#c77dff] transition-transform duration-300"
     >
       📖 <span>Library</span>
     </button>
 
     <button
       onClick={() => navigate("/my-books")}
-      className="flex items-center gap-2 hover:scale-110 hover:text-orange-300 transition-transform duration-300"
+      className="flex items-center gap-2 hover:scale-110 hover:shadow-[0_0_12px_#c77dff] transition-transform duration-300"
     >
       📚 <span>My Books</span>
     </button>
 
     <button
       onClick={handleLogout}
-      className="flex items-center gap-2 hover:scale-110 hover:text-red-400 transition-transform duration-300"
+      className="flex items-center gap-2 hover:scale-110 hover:shadow-[0_0_12px_#c77dff] transition-transform duration-300"
     >
       🚪 <span>Logout</span>
     </button>
@@ -93,11 +92,11 @@ function Dashboard() {
         <div className="flex flex-col items-center justify-center mt-16 px-4 text-center">
           <h1 className="text-4xl font-extrabold text-white drop-shadow-lg mb-2">
             Welcome back,{" "}
-            <span className="text-orange-400">
+            <span className="text-purple-400">
               {user ? user.username : "Loading..."}
             </span>
           </h1>
-          <p className="text-gray-200 text-lg mb-8">
+          <p className="text-white/80 text-lg mb-8">
             Track your reading journey and manage your library 📖
           </p>
 
@@ -105,19 +104,18 @@ function Dashboard() {
           <div className="flex gap-6 mb-12">
             <button
               onClick={() => navigate("/add-book")}
-              className="px-6 py-3 bg-orange-500 text-white rounded-xl shadow-lg hover:bg-orange-600 transition"
+              className="px-6 py-3 bg-black text-white rounded-xl shadow-lg border border-black/60 hover:scale-105 hover:shadow-[0_0_18px_rgba(183,136,255,0.9)] transition-all duration-300 font-semibold"
             >
               ➕ Add Book
             </button>
             <button
               onClick={() => navigate("/library")}
-              className="px-6 py-3 bg-yellow-500 text-white rounded-xl shadow-lg hover:bg-yellow-600 transition"
+              className="px-6 py-3 bg-black text-white rounded-xl shadow-lg border border-black/60 hover:scale-105 hover:shadow-[0_0_18px_rgba(183,136,255,0.9)] transition-all duration-300 font-semibold"
             >
               📖 View Library
             </button>
           </div>
 
-          {/* Recommended Books */}
           {/* Recommended Books */}
 {loginCount > 1 && (
   <div className="w-11/12 md:w-3/4 lg:w-2/3 mt-12">
@@ -127,7 +125,7 @@ function Dashboard() {
 
     <div className="flex flex-col gap-5">
       {/* Book 1 */}
-      <div className="flex items-center gap-4 px-6 py-4 backdrop-blur-md border border-white/30 rounded-lg text-white transition transform hover:scale-105 hover:shadow-2xl hover:bg-white/10">
+      <div className="flex items-center gap-4 px-6 py-4 bg-black/30 backdrop-blur-md border border-white/10 hover:border-[rgba(183,136,255,0.5)] rounded-lg text-white transition transform hover:scale-105 hover:shadow-[0_8px_30px_rgba(183,136,255,0.25)]">
         <img
           src="https://m.media-amazon.com/images/I/91bYsX41DVL.jpg"
           alt="Atomic Habits"
@@ -135,12 +133,12 @@ function Dashboard() {
         />
         <div className="flex justify-between items-center w-full">
           <span className="font-semibold text-lg">Atomic Habits</span>
-          <span className="text-yellow-300">⭐ 4.8</span>
+          <span className="text-purple-400">⭐ 4.8</span>
         </div>
       </div>
 
       {/* Book 2 */}
-      <div className="flex items-center gap-4 px-6 py-4 backdrop-blur-md border border-white/30 rounded-lg text-white transition transform hover:scale-105 hover:shadow-2xl hover:bg-white/10">
+      <div className="flex items-center gap-4 px-6 py-4 bg-black/30 backdrop-blur-md border border-white/10 hover:border-[rgba(183,136,255,0.5)] rounded-lg text-white transition transform hover:scale-105 hover:shadow-[0_8px_30px_rgba(183,136,255,0.25)]">
         <img
           src="https://m.media-amazon.com/images/I/71aFt4+OTOL.jpg"
           alt="The Alchemist"
@@ -148,12 +146,12 @@ function Dashboard() {
         />
         <div className="flex justify-between items-center w-full">
           <span className="font-semibold text-lg">The Alchemist</span>
-          <span className="text-yellow-300">⭐ 4.7</span>
+          <span className="text-purple-400">⭐ 4.7</span>
         </div>
       </div>
 
       {/* Book 3 */}
-      <div className="flex items-center gap-4 px-6 py-4 backdrop-blur-md border border-white/30 rounded-lg text-white transition transform hover:scale-105 hover:shadow-2xl hover:bg-white/10">
+      <div className="flex items-center gap-4 px-6 py-4 bg-black/30 backdrop-blur-md border border-white/10 hover:border-[rgba(183,136,255,0.5)] rounded-lg text-white transition transform hover:scale-105 hover:shadow-[0_8px_30px_rgba(183,136,255,0.25)]">
         <img
           src="https://m.media-amazon.com/images/I/81JG3b5G-5L.jpg"
           alt="Deep Work"
@@ -161,12 +159,12 @@ function Dashboard() {
         />
         <div className="flex justify-between items-center w-full">
           <span className="font-semibold text-lg">Deep Work</span>
-          <span className="text-yellow-300">⭐ 4.6</span>
+          <span className="text-purple-400">⭐ 4.6</span>
         </div>
       </div>
 
       {/* Book 4 */}
-      <div className="flex items-center gap-4 px-6 py-4 backdrop-blur-md border border-white/30 rounded-lg text-white transition transform hover:scale-105 hover:shadow-2xl hover:bg-white/10">
+      <div className="flex items-center gap-4 px-6 py-4 bg-black/30 backdrop-blur-md border border-white/10 hover:border-[rgba(183,136,255,0.5)] rounded-lg text-white transition transform hover:scale-105 hover:shadow-[0_8px_30px_rgba(183,136,255,0.25)]">
         <img
           src="https://m.media-amazon.com/images/I/71QKQ9mwV7L.jpg"
           alt="The Subtle Art"
@@ -176,7 +174,7 @@ function Dashboard() {
           <span className="font-semibold text-lg">
             The Subtle Art of Not Giving a F*ck
           </span>
-          <span className="text-yellow-300">⭐ 4.5</span>
+          <span className="text-purple-400">⭐ 4.5</span>
         </div>
       </div>
     </div>
