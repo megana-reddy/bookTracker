@@ -12,7 +12,9 @@ function Library() {
     const fetchDefaultBooks = async () => {
       try {
         setLoading(true);
-        const res = await fetch("https://www.googleapis.com/books/v1/volumes?q=fiction");
+        const res = await fetch(
+          "https://www.googleapis.com/books/v1/volumes?q=fiction"
+        );
         const data = await res.json();
         setResults(data.items || []);
       } catch (err) {
@@ -27,15 +29,14 @@ function Library() {
   const handleSearch = async (e) => {
     const query = e.target.value;
     setSearch(query);
-    if (!query) {
-      const res = await fetch("https://www.googleapis.com/books/v1/volumes?q=fiction");
-      const data = await res.json();
-      setResults(data.items || []);
-      return;
-    }
+
+    const url = query
+      ? `https://www.googleapis.com/books/v1/volumes?q=${query}`
+      : "https://www.googleapis.com/books/v1/volumes?q=fiction";
+
     try {
       setLoading(true);
-      const res = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${query}`);
+      const res = await fetch(url);
       const data = await res.json();
       setResults(data.items || []);
     } catch (err) {
@@ -86,23 +87,21 @@ function Library() {
       <div className="fixed inset-0 bg-black/50 z-10"></div>
 
       <div className="relative z-20 min-h-screen p-10">
-        
-        {/* Back */}
         <button
           onClick={() => navigate("/dashboard")}
-          className="absolute top-6 left-6 px-4 py-2 border border-black bg-black text-white rounded-lg shadow-lg hover:shadow-[0_0_12px_#c77dff] transition-all duration-300 font-medium"
+          className="absolute top-6 left-6 px-4 py-2 bg-black text-white rounded-lg hover:shadow-[0_0_12px_#c77dff]"
         >
           ← Back
         </button>
 
         <div className="flex justify-between items-center mb-10 mt-6">
-          <h1 className="text-4xl font-extrabold text-white drop-shadow-lg">
+          <h1 className="text-4xl font-extrabold text-white">
             🔎 Search Your Library
           </h1>
 
           <button
             onClick={() => navigate("/my-books")}
-            className="px-6 py-3 border border-black bg-black text-white rounded-xl shadow-lg hover:shadow-[0_0_15px_#c77dff] transition-all duration-300"
+            className="px-6 py-3 bg-black text-white rounded-xl hover:shadow-[0_0_15px_#c77dff]"
           >
             📚 Go to My Books
           </button>
@@ -115,10 +114,10 @@ function Library() {
             value={search}
             onChange={handleSearch}
             placeholder="Search by title or author..."
-            className="w-full px-6 py-4 rounded-full border border-black bg-black/20 text-white placeholder-white/70 focus:ring-2 focus:ring-[#c77dff] focus:border-[#c77dff] hover:shadow-[0_0_18px_#c77dff] focus:shadow-[0_0_20px_#c77dff] transition-all duration-200"
+            className="w-full px-6 py-4 rounded-full bg-black/20 text-white focus:ring-2 focus:ring-[#c77dff]"
           />
           {loading && (
-            <span className="absolute right-6 top-4 text-white/70 animate-pulse text-xl">
+            <span className="absolute right-6 top-4 text-white animate-pulse">
               ⏳
             </span>
           )}
@@ -128,13 +127,15 @@ function Library() {
         {results.length > 0 && (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
             {results.map((item) => {
-              const info = item.volumeInfo || item;
+              const info = item.volumeInfo || {};
+              const viewLink =
+                item.accessInfo?.webReaderLink || info.previewLink;
+
               return (
                 <div
                   key={item.id}
-                  className="bg-white/10 rounded-xl p-4 flex flex-col items-center border border-white/20 hover:scale-105 hover:shadow-[0_0_18px_#c77dff] transition-all duration-300 backdrop-blur-xl"
+                  className="bg-white/10 rounded-xl p-4 flex flex-col items-center hover:scale-105 transition-all backdrop-blur-xl"
                 >
-                  
                   {info.imageLinks?.thumbnail ? (
                     <img
                       src={info.imageLinks.thumbnail}
@@ -142,12 +143,12 @@ function Library() {
                       className="w-24 h-36 object-cover rounded-lg mb-3"
                     />
                   ) : (
-                    <div className="w-24 h-36 bg-white/30 flex items-center justify-center rounded-lg text-3xl">
+                    <div className="w-24 h-36 bg-white/30 flex items-center justify-center rounded-lg">
                       📘
                     </div>
                   )}
 
-                  <h2 className="text-sm font-bold text-center text-white line-clamp-2">
+                  <h2 className="text-sm font-bold text-white text-center line-clamp-2">
                     {info.title || "Untitled"}
                   </h2>
 
@@ -155,12 +156,25 @@ function Library() {
                     {info.authors ? info.authors.join(", ") : "Unknown"}
                   </p>
 
-                  <button
-                    onClick={() => handleAddFromGoogle(info)}
-                    className="mt-3 px-3 py-2 text-xs border border-black bg-black text-white rounded-md hover:shadow-[0_0_12px_#c77dff] transition-all duration-300"
-                  >
-                    ➕ Add
-                  </button>
+                  <div className="flex gap-2 mt-4">
+                    <button
+                      onClick={() => handleAddFromGoogle(info)}
+                      className="px-3 py-2 text-xs bg-black text-white rounded-md"
+                    >
+                      ➕ Add
+                    </button>
+
+                    {viewLink && (
+                      <a
+                        href={viewLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-3 py-2 text-xs bg-[#c77dff]/30 text-white rounded-md"
+                      >
+                        📖 View Book
+                      </a>
+                    )}
+                  </div>
                 </div>
               );
             })}

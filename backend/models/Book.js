@@ -2,6 +2,11 @@ import mongoose from "mongoose";
 import { Schema, model } from "mongoose";
 
 const bookSchema = new mongoose.Schema({
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'User'
+    },
     title: {type:String, required:true},
     author: {type: String, required:true},
     thumbnail: { type: String, default: null },

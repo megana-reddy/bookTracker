@@ -1,16 +1,17 @@
 import Book from "../models/Book.js";
 
-{/*  Add a new book, route =>   POST /api/books,  access => Public (later you can protect with auth middleware) */}
+{/*  Add a new book, route =>   POST /api/books,  access => Public (later you can protect with auth middleware) */ }
 
 export const addBook = async (req, res) => {
-    try{
-        const {title, author, thumbnail, status} = req.body;
+    try {
+        const { title, author, thumbnail, status } = req.body;
 
         if (!title || !author) {
             return res.status(400).json({ error: "Title and author are required" });
         }
 
         const newBook = new Book({
+            user: req.user._id,
             title,
             author,
             thumbnail,
@@ -18,81 +19,86 @@ export const addBook = async (req, res) => {
         })
 
         await newBook.save();
-        res.status(201).json({message: "Book Added successfully", book: newBook});
+        res.status(201).json({ message: "Book Added successfully", book: newBook });
     }
-    catch(error){
-        res.status(400).json({error: error.message});
+    catch (error) {
+        res.status(400).json({ error: error.message });
     }
 }
 
-{/*Get all books , route => GET /api/books, Public*/}
+{/*Get all books , route => GET /api/books, Public*/ }
 export const getBooks = async (req, res) => {
-    try{
-        const books = await Book.find().sort({createdAt: -1});
+    try {
+        const books = await Book.find({ user: req.user._id }).sort({ createdAt: -1 });
         res.json(books);
-    }  
-    catch(error){
-        res.status(500).json({error: error.message})
+    }
+    catch (error) {
+        res.status(500).json({ error: error.message })
     }
 }
-{/* Get single book by ID, route => /api/books/:id */}
+{/* Get single book by ID, route => /api/books/:id */ }
 export const getBooksById = async (req, res) => {
-    try{
+    try {
         const book = await Book.findById(req.params.id);
-        if(!book){
-            res.status(404).json({error: "Book not found"});
+
+        if (!book) {
+            return res.status(404).json({ error: "Book not found" });
+        }
+
+        if (book.user.toString() !== req.user._id.toString()) {
+            return res.status(401).json({ error: "Not authorized" });
         }
         res.json(book)
 
-    } catch(error){
-        res.status(500).json({error: error.message})
+    } catch (error) {
+        res.status(500).json({ error: error.message })
     }
 }
 
-{/* Update book, route => PUT /api/books/:id */}
+{/* Update book, route => PUT /api/books/:id */ }
 export const updateBook = async (req, res) => {
-    try{
-        const {title, author, status} = req.body;
-        const updatedBook = await Book.findByIdAndUpdate(
-            req.params.id,
-            {title, author, status},
-            {new: true, runValidators: true}
+    try {
+        const { title, author, status } = req.body;
+        const updatedBook = await Book.findOneAndUpdate(
+            { _id: req.params.id, user: req.user._id },
+            { title, author, status },
+            { new: true, runValidators: true }
         )
 
-        if(!updatedBook){
-            res.status(404).json({error: "Book Not Updated"})
+        if (!updatedBook) {
+            res.status(404).json({ error: "Book Not Updated" })
         }
         res.json(updatedBook)
 
-    } catch(error){
-        res.status(500).json({error: error.message})
+    } catch (error) {
+        res.status(500).json({ error: error.message })
     }
 }
 
-{/* Delete book, route => DELETE /api/books/:id */}
+{/* Delete book, route => DELETE /api/books/:id */ }
 export const deleteBook = async (req, res) => {
-    try{
-        const book = await Book.findByIdAndDelete(req.params.id);
-        if(!book){
-            return res.status(404).json({error: "Book not found"});
+    try {
+        const book = await Book.findOneAndDelete({ _id: req.params.id, user: req.user._id });
+        if (!book) {
+            return res.status(404).json({ error: "Book not found" });
         }
-        res.json({message: "Book deleted Successfully"})
-    } catch(error){
-        res.status(500).json({error: error.message})
+        res.json({ message: "Book deleted Successfully" })
+    } catch (error) {
+        res.status(500).json({ error: error.message })
     }
 }
 
-{/* search controller function */}
+{/* search controller function */ }
 // export const : exporting this function so it can be imported in bookRoutes.js
 // searchBooks : name of the function (you will use this in routes).
 // async (req, res) : asynchronous function with req (incoming request) and res (response we send back).
 export const searchBooks = async (req, res) => {
     // try : start of try and catch block to safely handle errors.
-    try{
+    try {
         // req.query → holds query parameters from the URL (/api/books/search?query=Atomichabits)
         //{ query } = req.query → destructures query out of req.query.
         //Example: if URL is /api/books/search?query=Harry, then query = "Harry"
-        const {query} = req.query;
+        const { query } = req.query;
         //if !query => if no search keyword is provided.
         //return res.json([]) → immediately return an empty array response which means no result
         if (!query) {
@@ -102,7 +108,7 @@ export const searchBooks = async (req, res) => {
             return books;
         }
     }
-    catch(err){
+    catch (err) {
 
     }
 }
